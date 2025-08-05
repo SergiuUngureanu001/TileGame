@@ -5,6 +5,6 @@ import net.sergiu.tilegame.display.Display;
 public class Launcher {
 
     public static void main(String[] args) {
-        new Game("Title", 800, 800);
+        new Game("Title", 700, 700);
     }
 }
