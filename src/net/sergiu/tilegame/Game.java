@@ -4,6 +4,7 @@ import net.sergiu.tilegame.display.Display;
 import net.sergiu.tilegame.gfx.Assets;
 import net.sergiu.tilegame.gfx.ImageLoader;
 import net.sergiu.tilegame.gfx.SpriteSheet;
+import net.sergiu.tilegame.input.KeyManager;
 import net.sergiu.tilegame.states.GameState;
 import net.sergiu.tilegame.states.MenuState;
 import net.sergiu.tilegame.states.State;
@@ -32,26 +33,32 @@ public class Game implements Runnable {
     private State gameState;
     private State menuState;
 
+    /// INPUT
+    private KeyManager keyManager;
+
     public Game(String title, int width, int height) {
         this.width = width;
         this.height = height;
         this.title = title;
 
-
+        keyManager = new KeyManager();
     }
 
     private void init() throws IOException {
         display = new Display(title, width, height);
+        display.getFrame().addKeyListener(keyManager);
         Assets.init();
 
-        gameState = new GameState();
-        menuState = new MenuState();
+        gameState = new GameState(this);
+        menuState = new MenuState(this);
         State.setState(gameState);
 
     }
 
 
     private void tick() {
+        keyManager.tick();
+
        if(State.getState() != null) {
            State.getState().tick();
        }
@@ -117,6 +124,10 @@ public class Game implements Runnable {
         }
 
         stop();
+    }
+
+    public KeyManager getKeyManager() {
+        return keyManager;
     }
 
     public synchronized void start() {
