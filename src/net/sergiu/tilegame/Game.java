@@ -4,6 +4,9 @@ import net.sergiu.tilegame.display.Display;
 import net.sergiu.tilegame.gfx.Assets;
 import net.sergiu.tilegame.gfx.ImageLoader;
 import net.sergiu.tilegame.gfx.SpriteSheet;
+import net.sergiu.tilegame.states.GameState;
+import net.sergiu.tilegame.states.MenuState;
+import net.sergiu.tilegame.states.State;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -25,7 +28,9 @@ public class Game implements Runnable {
     private BufferStrategy bs;
     private Graphics g;
 
-
+    ///  STATES
+    private State gameState;
+    private State menuState;
 
     public Game(String title, int width, int height) {
         this.width = width;
@@ -39,10 +44,17 @@ public class Game implements Runnable {
         display = new Display(title, width, height);
         Assets.init();
 
+        gameState = new GameState();
+        menuState = new MenuState();
+        State.setState(gameState);
+
     }
 
-    private void tick() {
 
+    private void tick() {
+       if(State.getState() != null) {
+           State.getState().tick();
+       }
     }
 
     private void render() {
@@ -58,7 +70,9 @@ public class Game implements Runnable {
 
         // Draw Start
 
-        g.drawImage(Assets.grass, 10, 10, null);
+        if(State.getState() != null) {
+            State.getState().render(g);
+        }
 
         // Draw End
         bs.show();
@@ -74,9 +88,32 @@ public class Game implements Runnable {
             throw new RuntimeException(e);
         }
 
+        int fps = 60;
+        double timePerTick = 1000000000 / fps;
+        double delta = 0;
+        long now;
+        long lastTime = System.nanoTime();
+        long timer = 0;
+        int ticks = 0;
+
         while(running) {
-            tick();
-            render();
+            now = System.nanoTime();
+            delta += (now - lastTime) / timePerTick;
+            timer += now - lastTime;
+            lastTime = now;
+
+            if(delta >= 1) {
+                tick();
+                render();
+                delta--;
+                ticks++;
+            }
+
+            if(timer >= 1000000000) {
+                System.out.println(ticks + " ticks");
+                ticks = 0;
+                timer = 0;
+            }
         }
 
         stop();
