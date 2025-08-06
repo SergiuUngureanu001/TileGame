@@ -2,6 +2,7 @@ package net.sergiu.tilegame;
 
 import net.sergiu.tilegame.display.Display;
 import net.sergiu.tilegame.gfx.Assets;
+import net.sergiu.tilegame.gfx.GameCamera;
 import net.sergiu.tilegame.gfx.ImageLoader;
 import net.sergiu.tilegame.gfx.SpriteSheet;
 import net.sergiu.tilegame.input.KeyManager;
@@ -19,9 +20,9 @@ public class Game implements Runnable {
 
     private Display display;
 
-    public String title;
-    public int width;
-    public int height;
+    private String title;
+    private int width;
+    private int height;
 
     private boolean running = false;
     private Thread thread;
@@ -36,6 +37,9 @@ public class Game implements Runnable {
     /// INPUT
     private KeyManager keyManager;
 
+    /// CAMERA
+    private GameCamera gameCamera;
+
     public Game(String title, int width, int height) {
         this.width = width;
         this.height = height;
@@ -48,6 +52,8 @@ public class Game implements Runnable {
         display = new Display(title, width, height);
         display.getFrame().addKeyListener(keyManager);
         Assets.init();
+
+        gameCamera = new GameCamera(this,0, 0);
 
         gameState = new GameState(this);
         menuState = new MenuState(this);
@@ -125,11 +131,40 @@ public class Game implements Runnable {
 
         stop();
     }
-
+    /// GETTERS AND SETTERS
     public KeyManager getKeyManager() {
         return keyManager;
     }
 
+    public GameCamera getGameCamera() {
+        return gameCamera;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+
+    ///  THREAD GAME
     public synchronized void start() {
         if(running) return;
         running = true;
