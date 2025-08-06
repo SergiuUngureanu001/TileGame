@@ -2,6 +2,9 @@ package net.sergiu.tilegame.worlds;
 
 import net.sergiu.tilegame.Game;
 import net.sergiu.tilegame.Handler;
+import net.sergiu.tilegame.entities.EntityManager;
+import net.sergiu.tilegame.entities.creatures.Player;
+import net.sergiu.tilegame.entities.statics.Tree;
 import net.sergiu.tilegame.tiles.Tile;
 import net.sergiu.tilegame.utils.Utils;
 
@@ -15,13 +18,25 @@ public class World {
     private int spawnX, spawnY;
     private int[][] tiles;
 
+    /// ENTITIES
+    private EntityManager entityManager;
+
     public World(Handler handler, String path) {
         this.handler = handler;
+        entityManager = new EntityManager(handler, new Player(handler, 100, 100));
+        entityManager.addEntity(new Tree(handler, 100, 250));
+        entityManager.addEntity(new Tree(handler, 200, 250));
+        entityManager.addEntity(new Tree(handler, 150, 400));
+        entityManager.addEntity(new Tree(handler, 900, 670));
+
         loadWorld(path);
+
+        entityManager.getPlayer().setX(spawnX);
+        entityManager.getPlayer().setY(spawnY);
     }
 
     public void tick() {
-
+        entityManager.tick();
     }
 
     public void render(Graphics g) {
@@ -35,6 +50,8 @@ public class World {
                 getTile(x, y).render(g, (int)(x * Tile.TILEWIDTH - handler.getGameCamera().getxOffset()), (int)(y * Tile.TILEHEIGHT - handler.getGameCamera().getyOffset()));
             }
         }
+        // Entities
+        entityManager.render(g);
     }
 
     public Tile getTile(int x, int y) {
