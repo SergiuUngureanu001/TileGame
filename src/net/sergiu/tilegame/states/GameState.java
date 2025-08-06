@@ -1,6 +1,7 @@
 package net.sergiu.tilegame.states;
 
 import net.sergiu.tilegame.Game;
+import net.sergiu.tilegame.Handler;
 import net.sergiu.tilegame.entities.creatures.Player;
 import net.sergiu.tilegame.gfx.Assets;
 import net.sergiu.tilegame.tiles.Tile;
@@ -13,10 +14,12 @@ public class GameState extends State{
     private Player player;
     private World world;
 
-    public GameState(Game game){
-        super(game);
-        player = new Player(game, 100, 100);
-        world = new World(game,"worlds/world1.txt");
+    public GameState(Handler handler) {
+        super(handler);
+        world = new World(handler,"worlds/world1.txt");
+        handler.setWorld(world);
+        player = new Player(handler, 100, 100);
+
 
     }
 
