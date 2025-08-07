@@ -18,7 +18,7 @@ public class MenuState extends State{
         uiManager = new UIManager(handler);
         handler.getMouseManager().setUiManager(uiManager);
 
-        uiManager.addObject(new UIImageButton(200, 200, 128, 64, Assets.btn_start, new  ClickListener() {
+        uiManager.addObject(new UIImageButton(280, 300, 128, 64, Assets.btn_start, new  ClickListener() {
             @Override
             public void onClick() {
                 handler.getMouseManager().setUiManager(null);
@@ -32,9 +32,6 @@ public class MenuState extends State{
     public void tick() {
         uiManager.tick();
 
-        // Temporary
-        handler.getMouseManager().setUiManager(null);
-        State.setState(handler.getGame().gameState);
     }
 
     @Override
