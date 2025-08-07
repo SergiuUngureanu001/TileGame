@@ -4,7 +4,9 @@ import net.sergiu.tilegame.Game;
 import net.sergiu.tilegame.Handler;
 import net.sergiu.tilegame.entities.EntityManager;
 import net.sergiu.tilegame.entities.creatures.Player;
+import net.sergiu.tilegame.entities.statics.Rock;
 import net.sergiu.tilegame.entities.statics.Tree;
+import net.sergiu.tilegame.items.ItemManager;
 import net.sergiu.tilegame.tiles.Tile;
 import net.sergiu.tilegame.utils.Utils;
 
@@ -21,12 +23,16 @@ public class World {
     /// ENTITIES
     private EntityManager entityManager;
 
+    /// ITEMS
+    private ItemManager itemManager;
+
     public World(Handler handler, String path) {
         this.handler = handler;
         entityManager = new EntityManager(handler, new Player(handler, 100, 100));
+        itemManager = new ItemManager(handler);
         entityManager.addEntity(new Tree(handler, 100, 250));
         entityManager.addEntity(new Tree(handler, 200, 250));
-        entityManager.addEntity(new Tree(handler, 150, 400));
+        entityManager.addEntity(new Rock(handler, 150, 400));
         entityManager.addEntity(new Tree(handler, 900, 670));
 
         loadWorld(path);
@@ -36,6 +42,7 @@ public class World {
     }
 
     public void tick() {
+        itemManager.tick();
         entityManager.tick();
     }
 
@@ -50,6 +57,9 @@ public class World {
                 getTile(x, y).render(g, (int)(x * Tile.TILEWIDTH - handler.getGameCamera().getxOffset()), (int)(y * Tile.TILEHEIGHT - handler.getGameCamera().getyOffset()));
             }
         }
+        // Items
+        itemManager.render(g);
+
         // Entities
         entityManager.render(g);
     }
@@ -94,4 +104,19 @@ public class World {
         return entityManager;
     }
 
+    public ItemManager getItemManager() {
+        return itemManager;
+    }
+
+    public void setItemManager(ItemManager itemManager) {
+        this.itemManager = itemManager;
+    }
+
+    public Handler getHandler() {
+        return handler;
+    }
+
+    public void setHandler(Handler handler) {
+        this.handler = handler;
+    }
 }
