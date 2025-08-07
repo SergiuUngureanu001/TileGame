@@ -6,6 +6,7 @@ import net.sergiu.tilegame.gfx.GameCamera;
 import net.sergiu.tilegame.gfx.ImageLoader;
 import net.sergiu.tilegame.gfx.SpriteSheet;
 import net.sergiu.tilegame.input.KeyManager;
+import net.sergiu.tilegame.input.MouseManager;
 import net.sergiu.tilegame.states.GameState;
 import net.sergiu.tilegame.states.MenuState;
 import net.sergiu.tilegame.states.State;
@@ -31,11 +32,12 @@ public class Game implements Runnable {
     private Graphics g;
 
     ///  STATES
-    private State gameState;
-    private State menuState;
+    public State gameState;
+    public State menuState;
 
     /// INPUT
     private KeyManager keyManager;
+    private MouseManager mouseManager;
 
     /// CAMERA
     private GameCamera gameCamera;
@@ -49,11 +51,16 @@ public class Game implements Runnable {
         this.title = title;
 
         keyManager = new KeyManager();
+        mouseManager = new MouseManager();
     }
 
     private void init() throws IOException {
         display = new Display(title, width, height);
         display.getFrame().addKeyListener(keyManager);
+        display.getFrame().addMouseListener(mouseManager);
+        display.getFrame().addMouseMotionListener(mouseManager);
+        display.getCanvas().addMouseListener(mouseManager);
+        display.getCanvas().addMouseMotionListener(mouseManager);
         Assets.init();
 
         handler = new Handler(this);
@@ -61,7 +68,7 @@ public class Game implements Runnable {
 
         gameState = new GameState(handler);
         menuState = new MenuState(handler);
-        State.setState(gameState);
+        State.setState(menuState);
 
     }
 
@@ -138,6 +145,10 @@ public class Game implements Runnable {
     /// GETTERS AND SETTERS
     public KeyManager getKeyManager() {
         return keyManager;
+    }
+
+    public MouseManager getMouseManager() {
+        return mouseManager;
     }
 
     public GameCamera getGameCamera() {

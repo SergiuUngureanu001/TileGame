@@ -2,6 +2,7 @@ package net.sergiu.tilegame;
 
 import net.sergiu.tilegame.gfx.GameCamera;
 import net.sergiu.tilegame.input.KeyManager;
+import net.sergiu.tilegame.input.MouseManager;
 import net.sergiu.tilegame.worlds.World;
 
 public class Handler {
@@ -19,6 +20,10 @@ public class Handler {
 
     public KeyManager getKeyManager() {
         return game.getKeyManager();
+    }
+
+    public MouseManager getMouseManager() {
+        return game.getMouseManager();
     }
 
     public int getWidth() {
